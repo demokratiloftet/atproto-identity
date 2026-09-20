@@ -1,0 +1,20 @@
+{
+  "name": "@loftet/identity",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.mjs",
+    "./sandbox": "./sandbox-pds.mjs"
+  },
+  "files": [
+    "*.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "peerDependencies": {
+    "@loftet/auth": "^0.2.0"
+  }
+}

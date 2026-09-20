@@ -1,0 +1,22 @@
+{
+  "name": "loftet-identity-component",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "workspaces": [
+    "packages/auth",
+    "packages/identity"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:integration": "node test/identity-integration.mjs",
+    "test:package": "node scripts/test-package.mjs",
+    "pack": "node scripts/pack.mjs"
+  },
+  "devDependencies": {
+    "jose": "6.2.12"
+  }
+}
