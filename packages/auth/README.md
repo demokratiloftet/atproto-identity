@@ -153,3 +153,13 @@ See [Min idrett / Idrettens ID preparation and request to NIF](MIN-IDRETT.md).
 
 OIDC-first onboarding is implemented by [IdentityGateway](../identity/README.md).
 Identity links alone are not login grants; the gateway requires explicit consent.
+
+
+### Consumer OAuth permissions
+
+`createAtprotoProvider({scope, ...options})` accepts the host app's explicit OAuth
+scope string and applies it to both HTTPS metadata and loopback client IDs. The
+default remains `atproto transition:generic` for existing consumers. Spaces
+consumers must request their own `space:` permissions; transitional generic
+permission does not authorize private Spaces reads, writes or management.
+The host app must still enforce native membership and author ownership.

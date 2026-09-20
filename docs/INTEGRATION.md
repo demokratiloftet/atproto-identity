@@ -86,5 +86,9 @@ When activating the component in that app:
    private outsider denial and membership removal against the app's fixture;
    run its documented unit, integration, isolation and build checks.
 
-That activation is not implemented by repository extraction. The source is now
-reusable independently, and no changes to the running social demo are necessary.
+Social now installs these packages and implements an optional gateway mode,
+DID-bound profiles, explicit confirmation UI and OAuth-aware Spaces transport.
+Auth 0.2.1 accepts the consumer's explicit `scope`; social requests its own
+Spaces permissions, which `transition:generic` does not grant. The existing
+fixture remains on demo sessions pending real OAuth ingress and registration.
+See the consuming app's `docs/IDENTITY.md` for exact activation and test status.

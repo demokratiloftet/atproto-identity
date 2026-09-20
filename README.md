@@ -49,9 +49,9 @@ consumer app (example sibling layout):
 
 ```sh
 mkdir -p vendor
-cp ../identity-component/dist/loftet-auth-0.2.0.tgz vendor/
+cp ../identity-component/dist/loftet-auth-0.2.1.tgz vendor/
 cp ../identity-component/dist/loftet-identity-0.2.0.tgz vendor/
-npm install --save-exact ./vendor/loftet-auth-0.2.0.tgz ./vendor/loftet-identity-0.2.0.tgz
+npm install --save-exact ./vendor/loftet-auth-0.2.1.tgz ./vendor/loftet-identity-0.2.0.tgz
 ```
 
 A pnpm app can use `pnpm add` with the same archive paths. Commit the two archives,

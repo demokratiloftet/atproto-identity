@@ -1,9 +1,9 @@
 import { NodeOAuthClient, buildAtprotoLoopbackClientMetadata, requestLocalLock } from '@atproto/oauth-client-node';
-export function createAtprotoProvider({origin,store,fetch,plcUrl,pdsOrigin,allowHttp=false}) {
+export function createAtprotoProvider({origin,store,fetch,plcUrl,pdsOrigin,allowHttp=false,scope='atproto transition:generic'}) {
   const redirect=`${origin}/auth/atproto/callback`;
   const clientMetadata=origin.startsWith('http://127.0.0.1:')
-    ? buildAtprotoLoopbackClientMetadata({scope:'atproto transition:generic',redirect_uris:[redirect]})
-    : {client_id:`${origin}/auth/client-metadata.json`,client_name:'Loftet',client_uri:origin,redirect_uris:[redirect],scope:'atproto transition:generic',grant_types:['authorization_code','refresh_token'],response_types:['code'],token_endpoint_auth_method:'none',application_type:'web',dpop_bound_access_tokens:true};
+    ? buildAtprotoLoopbackClientMetadata({scope,redirect_uris:[redirect]})
+    : {client_id:`${origin}/auth/client-metadata.json`,client_name:'Loftet',client_uri:origin,redirect_uris:[redirect],scope,grant_types:['authorization_code','refresh_token'],response_types:['code'],token_endpoint_auth_method:'none',application_type:'web',dpop_bound_access_tokens:true};
   const client=new NodeOAuthClient({
     clientMetadata,allowHttp,fetch,plcDirectoryUrl:plcUrl,requestLock:requestLocalLock,
     stateStore:store.adapter('at-state',10*60000),sessionStore:store.adapter('at-session'),
