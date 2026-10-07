@@ -34,7 +34,7 @@ the adapter contract. The local `.test` adapter is only exported through
 ## HTTP and UI contract
 
 Use Node-compatible request/response objects (Express supports them). Register
-the following operations as in calendar's `src/server.mjs`. Mutation routes must
+the following operations as in calendar's `src/server.ts`. Mutation routes must
 enforce exact same-origin requests, JSON content type and bounded request bodies;
 the gateway does not replace that HTTP boundary. Never log callback query strings.
 
@@ -64,7 +64,7 @@ PDS/PLC per app, not arbitrary public account discovery.
 
 ## Connecting loftet-social
 
-Inspected the sibling app's `server/index.mjs` and `server/pds.mjs`. Currently,
+Inspected the sibling app's `server/index.ts` and `server/pds.ts`. Currently,
 signup/sign-in create PDS password sessions, and `req.session.accessJwt` authorizes
 PDS calls. Private Spaces reads also require fresh viewer credentials and DPoP.
 An identity-library import alone cannot replace these credentials.

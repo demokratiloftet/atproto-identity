@@ -3,7 +3,7 @@
 Reusable server-side identity and account onboarding for AT Protocol apps.
 This is a standalone Git repository, extracted from `calendar-app` commit
 `aff4ad0bb2736fea2240d5a7d66250d40ddd486a`. It owns the source and tests of two
-Node.js packages; it is not an application, user directory or hosted SSO service.
+Node.js packages written in TypeScript; it is not an application, user directory or hosted SSO service.
 
 | Package | Responsibility |
 | --- | --- |
@@ -18,7 +18,7 @@ organisation membership, roles or private-content access.
 
 ## Develop and verify
 
-Requires Node.js 22.13+ and npm. No calendar checkout, Docker or network services
+Requires Node.js 24.17.x and npm. No calendar checkout, Docker or network services
 are needed for the unit tests. Package installation needs the npm dependency
 cache or registry access.
 
@@ -26,13 +26,14 @@ cache or registry access.
 gh repo clone demokratiloftet/identity-component
 cd identity-component
 npm ci
-npm test
+npm test # strict typecheck, compiled packages, then runtime tests
 npm run test:package
 npm run pack
 ```
 
 `test:package` installs the two archives in a fresh directory outside this repo
-and checks their public imports. `pack` produces versioned archives in ignored
+and checks their runtime imports and TypeScript declarations, including rejection
+of an invalid argument. `pack` produces versioned archives in ignored
 `dist/`. Packages are not published to npm. Source is maintained in the private
 `demokratiloftet/identity-component` repository.
 
@@ -52,9 +53,9 @@ consumer app (example sibling layout):
 
 ```sh
 mkdir -p vendor
-cp ../identity-component/dist/loftet-auth-0.2.1.tgz vendor/
-cp ../identity-component/dist/loftet-identity-0.2.0.tgz vendor/
-npm install --save-exact ./vendor/loftet-auth-0.2.1.tgz ./vendor/loftet-identity-0.2.0.tgz
+cp ../identity-component/dist/loftet-auth-0.3.0.tgz vendor/
+cp ../identity-component/dist/loftet-identity-0.3.0.tgz vendor/
+npm install --save-exact ./vendor/loftet-auth-0.3.0.tgz ./vendor/loftet-identity-0.3.0.tgz
 ```
 
 A pnpm app can use `pnpm add` with the same archive paths. Commit the two archives,
@@ -92,3 +93,13 @@ the same organisation identity independently in two stores can create two DIDs.
 For one account across apps, link an existing DID through each app's AT OAuth or
 design a shared onboarding broker as a separate feature. Never share SQLite
 files or keys between apps as a shortcut.
+
+## TypeScript and distribution
+
+All maintained package, test and tooling source is TypeScript with `strict: true`.
+`npm run typecheck` checks the complete source tree. Node 24 runs test/tooling
+`.ts` files; distributable packages contain compiled ESM JavaScript and `.d.ts`
+declarations so consumers need no TypeScript runtime or loader. `npm run build`
+compiles auth first, then identity against its public package API. Generated
+`dist/` directories are ignored. Runtime validation of identities, protocol
+responses and request data remains necessary and is kept in place.

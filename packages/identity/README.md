@@ -70,7 +70,7 @@ is deployed to the VPS. The synthetic identity provider is not a real login syst
 
 ```sh
 npm test
-node test/identity-integration.mjs
+node test/identity-integration.ts
 npm run test:package
 # In the consuming calendar repository: npm run test:integration && npm run verify
 ```
@@ -84,7 +84,6 @@ Verified in the local browser: existing-account linking, new-account creation,
 explicit confirmation, session persistence after calendar restart, and OIDC-only
 return with retained AT authorization. HTTP checks reject cross-origin mutations
 and unauthenticated creation, confirmation and event publication.
-
 
 ## Package boundary and reuse
 
@@ -109,17 +108,31 @@ IDs, and a provisioning adapter. These example domains are illustrative, not a
 claim that the operator has control of them:
 
 ```js
-import {IdentityGateway, HandleProvisioner} from '@loftet/identity';
+import { IdentityGateway, HandleProvisioner } from "@loftet/identity";
 
-const provisioner = new HandleProvisioner({namespaces: [
-  {domain: 'idrett.devotta.no', providers: ['idrettens-id'], adapter: orgPdsAdapter},
-  {domain: 'demokratiloftet.no', providers: ['idrettens-id', 'community'], adapter: sharedPdsAdapter},
-]});
+const provisioner = new HandleProvisioner({
+  namespaces: [
+    {
+      domain: "idrett.devotta.no",
+      providers: ["idrettens-id"],
+      adapter: orgPdsAdapter,
+    },
+    {
+      domain: "demokratiloftet.no",
+      providers: ["idrettens-id", "community"],
+      adapter: sharedPdsAdapter,
+    },
+  ],
+});
 // orgPdsAdapter/sharedPdsAdapter are deployment-specific implementations, not
 // bundled public-service adapters. Existing AuthStore/OIDC/AT OAuth setup:
 const gateway = new IdentityGateway({
-  store, providers, atproto, origin, provisioner,
-  entryProviders: ['idrettens-id', 'community'],
+  store,
+  providers,
+  atproto,
+  origin,
+  provisioner,
+  entryProviders: ["idrettens-id", "community"],
 });
 ```
 

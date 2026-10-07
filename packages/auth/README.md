@@ -6,19 +6,19 @@ claims, infer club membership, or treat provider identities as interchangeable.
 
 ## Boundaries
 
-- `atproto.mjs`: official `@atproto/oauth-client-node` SDK, including PKCE, PAR,
+- `atproto.ts`: official `@atproto/oauth-client-node` SDK, including PKCE, PAR,
   DPoP, issuer/identity validation and refresh. Handles resolve against the
   configured PDS and DIDs against the configured PLC. This sandbox accepts its
   own accounts, not arbitrary public accounts.
-- `oidc.mjs`: `openid-client` authorization code + S256 PKCE, state, nonce,
+- `oidc.ts`: `openid-client` authorization code + S256 PKCE, state, nonce,
   signature/JWKS, issuer, audience, expiry and authentication freshness checks.
-- `service.mjs`: browser binding, session rotation, link confirmation, unlink,
+- `service.ts`: browser binding, session rotation, link confirmation, unlink,
   logout and the public account-view model. Framework-independent methods accept
-  Node-compatible request/response objects; see calendar routes in `src/server.mjs`.
-- `store.mjs`: persistent encrypted SQLite adapter for a **single app process**.
+  Node-compatible request/response objects; see calendar routes in `src/server.ts`.
+- `store.ts`: persistent encrypted SQLite adapter for a **single app process**.
   SDK refresh locks are process-local; use a shared database and distributed
   locks before running multiple app replicas.
-- `transport.mjs`: exact outbound-origin allowlist. Development-only HTTP
+- `transport.ts`: exact outbound-origin allowlist. Development-only HTTP
   rewrites preserve canonical Host, issuer and DPoP URLs. Redirects are rejected.
 
 ## Reuse
@@ -28,12 +28,15 @@ repository’s `dist/` output and import:
 
 ```js
 import {
-  AuthStore, AuthService, OidcProvider,
-  createAtprotoProvider, restrictedFetch,
-} from '@loftet/auth'
+  AuthStore,
+  AuthService,
+  OidcProvider,
+  createAtprotoProvider,
+  restrictedFetch,
+} from "@loftet/auth";
 ```
 
-Use the consuming calendar’s `src/auth.mjs` as a composition example. See also
+Use the consuming calendar’s `src/auth.ts` as a composition example. See also
 [app integration](../../docs/INTEGRATION.md). Supply your own app origin,
 configured PDS/PLC, storage directory, encryption key, fetch allowlist, and
 provider definitions. Keep both signing-in and linking routes on the same app
@@ -60,7 +63,7 @@ adapter does. Never expose auth store contents or callback query strings in logs
 No matching by email, name or telephone number. No automatic merging. One identity
 per provider per DID, and one DID per `(issuer, subject)`, including when the same
 issuer is configured under another provider ID. A person can use the same subject
-string at *different issuers* without collision.
+string at _different issuers_ without collision.
 
 Multiple browser sessions for the same DID share the SDK authorization.
 Reauthentication rotates that browser cookie. Logout invalidates all local
@@ -116,13 +119,13 @@ link has a particular assurance level without agreeing and testing that contract
 
 Provider readiness:
 
-| Provider | Current state | Required before activation |
-|---|---|---|
-| Local Demo-identitet | Working OIDC fixture, two synthetic identities | None |
-| Idrettens ID | Configuration template prepared; not activated | NIF approval, registered test client and restricted egress |
-| BankID | Not connected | Approved provider/integrator, test agreement and authentication profile |
-| Vipps | Preset implemented; synthetic tests pass; not activated | Login-enabled sales unit credentials, registered callback and constrained external egress |
-| Feide | Not connected | Registered OIDC application and selected attribute groups |
+| Provider             | Current state                                           | Required before activation                                                                |
+| -------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Local Demo-identitet | Working OIDC fixture, two synthetic identities          | None                                                                                      |
+| Idrettens ID         | Configuration template prepared; not activated          | NIF approval, registered test client and restricted egress                                |
+| BankID               | Not connected                                           | Approved provider/integrator, test agreement and authentication profile                   |
+| Vipps                | Preset implemented; synthetic tests pass; not activated | Login-enabled sales unit credentials, registered callback and constrained external egress |
+| Feide                | Not connected                                           | Registered OIDC application and selected attribute groups                                 |
 
 Provider references: [Idrettens ID](https://www.idrettsforbundet.no/digital/idrettens-id/),
 [Vipps Login](https://developer.vippsmobilepay.com/docs/APIs/login-api/login-api-quick-start/),
@@ -153,7 +156,6 @@ See [Min idrett / Idrettens ID preparation and request to NIF](MIN-IDRETT.md).
 
 OIDC-first onboarding is implemented by [IdentityGateway](../identity/README.md).
 Identity links alone are not login grants; the gateway requires explicit consent.
-
 
 ### Consumer OAuth permissions
 

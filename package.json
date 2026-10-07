@@ -1,22 +1,30 @@
 {
   "name": "loftet-identity-component",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.13"
+    "node": ">=24.17 <25"
   },
   "workspaces": [
     "packages/auth",
     "packages/identity"
   ],
   "scripts": {
-    "test": "node --test test/*.test.mjs",
-    "test:integration": "node test/identity-integration.mjs",
-    "test:package": "node scripts/test-package.mjs",
-    "pack": "node scripts/pack.mjs"
+    "test": "node --test test/*.test.ts",
+    "test:integration": "node test/identity-integration.ts",
+    "test:package": "node scripts/test-package.ts",
+    "pack": "npm run build && node scripts/pack.ts",
+    "build": "tsc -p packages/auth && tsc -p packages/identity",
+    "typecheck": "npm run build && tsc --noEmit",
+    "pretest": "npm run typecheck",
+    "format": "prettier --write packages test scripts",
+    "format:check": "prettier --check packages test scripts"
   },
   "devDependencies": {
-    "jose": "6.2.12"
+    "@types/node": "24.19.1",
+    "jose": "6.2.12",
+    "prettier": "3.9.9",
+    "typescript": "7.0.2"
   }
 }

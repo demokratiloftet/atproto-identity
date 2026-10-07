@@ -1,19 +1,25 @@
 {
   "name": "@loftet/auth",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
-  "exports": "./index.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "engines": {
-    "node": ">=22.13"
+    "node": ">=24.17 <25"
   },
   "dependencies": {
     "@atproto/oauth-client-node": "0.5.7",
     "openid-client": "6.8.8"
   },
   "files": [
-    "*.mjs",
-    "*.md",
+    "dist",
+    "README.md",
     "providers/*.json"
-  ]
+  ],
+  "types": "./dist/index.d.ts"
 }
