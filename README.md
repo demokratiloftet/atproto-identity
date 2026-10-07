@@ -23,6 +23,8 @@ are needed for the unit tests. Package installation needs the npm dependency
 cache or registry access.
 
 ```sh
+gh repo clone demokratiloftet/identity-component
+cd identity-component
 npm ci
 npm test
 npm run test:package
@@ -31,7 +33,8 @@ npm run pack
 
 `test:package` installs the two archives in a fresh directory outside this repo
 and checks their public imports. `pack` produces versioned archives in ignored
-`dist/`. There are no publishing scripts and no configured remote.
+`dist/`. Packages are not published to npm. Source is maintained in the private
+`demokratiloftet/identity-component` repository.
 
 Optional real-PDS test, **only with the existing isolated loopback PDS running**:
 
@@ -75,9 +78,10 @@ See [integration guide](docs/INTEGRATION.md),
 
 - **calendar-app:** migrated to the 0.2.0 packages. Composition, UI and app
   authorization stay in that repo; SQLite format and cookies are unchanged.
-- **loftet-social:** a prospective consumer. Its current password/session and
-  Spaces credential path is not replaced by this extraction. The integration
-  guide identifies the required bridge and checks.
+- **loftet-social:** shared-component AT OAuth is active on the public demo as
+  of 2026-09-21. Private Spaces reads retain their separate native credential
+  checks. Organisation OIDC providers are not configured; local fixtures still
+  default to demo password login. See its `docs/IDENTITY.md` for verification.
 
 Real Idrettens ID, production domain/DNS provisioning, production PDS signup,
 Matrix, account recovery and automatic cross-app SSO are not implemented.
