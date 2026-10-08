@@ -22,7 +22,7 @@
     "node": ">=24.17 <25"
   },
   "peerDependencies": {
-    "@loftet/auth": "^0.3.0"
+    "@loftet/auth": "workspace:^"
   },
   "types": "./dist/index.d.ts"
 }

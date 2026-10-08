@@ -18,17 +18,19 @@ organisation membership, roles or private-content access.
 
 ## Develop and verify
 
-Requires Node.js 24.17.x and npm. No calendar checkout, Docker or network services
+Requires Node.js 24.17.x and pnpm 11.8.0. No calendar checkout, Docker or network services
 are needed for the unit tests. Package installation needs the npm dependency
 cache or registry access.
 
 ```sh
+# One-time setup if pnpm is not installed:
+npm install --global pnpm@11.8.0
 gh repo clone demokratiloftet/identity-component
 cd identity-component
-npm ci
-npm test # strict typecheck, compiled packages, then runtime tests
-npm run test:package
-npm run pack
+pnpm install --frozen-lockfile
+pnpm test # strict typecheck, compiled packages, then runtime tests
+pnpm run test:package
+pnpm run pack
 ```
 
 `test:package` installs the two archives in a fresh directory outside this repo
@@ -40,7 +42,7 @@ of an invalid argument. `pack` produces versioned archives in ignored
 Optional real-PDS test, **only with the existing isolated loopback PDS running**:
 
 ```sh
-npm run test:integration
+pnpm run test:integration
 ```
 
 It creates a disposable synthetic `.test` account without resetting the PDS.
@@ -48,17 +50,17 @@ App integration/isolation tests continue to belong to the consuming app.
 
 ## Install in another app
 
-From this repository, produce the two archives with `npm run pack`. From the
+From this repository, produce the two archives with `pnpm run pack`. From the
 consumer app (example sibling layout):
 
 ```sh
 mkdir -p vendor
 cp ../identity-component/dist/loftet-auth-0.3.0.tgz vendor/
 cp ../identity-component/dist/loftet-identity-0.3.0.tgz vendor/
-npm install --save-exact ./vendor/loftet-auth-0.3.0.tgz ./vendor/loftet-identity-0.3.0.tgz
+pnpm add --save-exact ./vendor/loftet-auth-0.3.0.tgz ./vendor/loftet-identity-0.3.0.tgz
 ```
 
-A pnpm app can use `pnpm add` with the same archive paths. Commit the two archives,
+Commit the two archives,
 package manifest and lockfile in the consumer. Docker must copy `vendor/` before
 installing dependencies. This keeps app builds self-contained while the source
 has one owner here. Do not edit extracted files in `node_modules` or copy source
@@ -97,9 +99,9 @@ files or keys between apps as a shortcut.
 ## TypeScript and distribution
 
 All maintained package, test and tooling source is TypeScript with `strict: true`.
-`npm run typecheck` checks the complete source tree. Node 24 runs test/tooling
+`pnpm run typecheck` checks the complete source tree. Node 24 runs test/tooling
 `.ts` files; distributable packages contain compiled ESM JavaScript and `.d.ts`
-declarations so consumers need no TypeScript runtime or loader. `npm run build`
+declarations so consumers need no TypeScript runtime or loader. `pnpm run build`
 compiles auth first, then identity against its public package API. Generated
 `dist/` directories are ignored. Runtime validation of identities, protocol
 responses and request data remains necessary and is kept in place.

@@ -69,10 +69,10 @@ is deployed to the VPS. The synthetic identity provider is not a real login syst
 ## Verification
 
 ```sh
-npm test
+pnpm test
 node test/identity-integration.ts
-npm run test:package
-# In the consuming calendar repository: npm run test:integration && npm run verify
+pnpm run test:package
+# In the consuming calendar repository: pnpm run test:integration && pnpm run verify
 ```
 
 Gateway tests cover missing confirmation, wrong/replayed callbacks, logout during
@@ -87,7 +87,7 @@ and unauthenticated creation, confirmation and event publication.
 
 ## Package boundary and reuse
 
-This directory is now an npm workspace package with a public API. Calendar uses
+This directory is now an pnpm workspace package with a public API. Calendar uses
 `@loftet/identity`, not source paths into the directory. It exports
 `IdentityGateway` and `HandleProvisioner`; the local-only PDS adapter is an explicit
 `@loftet/identity/sandbox` import. `@loftet/auth` is a peer dependency providing
@@ -96,7 +96,7 @@ code. The host app owns HTTP routes, UI, transport allowlists and deployment.
 
 Both packages now live in the standalone `identity-component` Git repository.
 Calendar installs versioned tarballs built here; it no longer owns their source.
-Run `npm run pack` from the repository root and install both archives into a
+Run `pnpm run pack` from the repository root and install both archives into a
 consumer. See [repository setup](../../README.md) and
 [app integration](../../docs/INTEGRATION.md). Both packages remain private and
 unpublished. A separate identity server is not required.
@@ -202,9 +202,9 @@ Protocol references: [handles](https://atproto.com/specs/handle),
 
 38 unit tests pass, including provider/domain restrictions, malformed names,
 case-insensitive reservations across identities, ambiguous creation, credential
-filtering and returning-user login. `npm run test:integration`, the standalone
-identity integration test and `npm run verify` pass against the isolated PDS.
+filtering and returning-user login. `pnpm run test:integration`, the standalone
+identity integration test and `pnpm run verify` pass against the isolated PDS.
 The browser flow was exercised with a fresh synthetic person: visible proposed
 handle → creation → real local AT OAuth → explicit link confirmation → signed-in
-calendar. `npm pack --dry-run --workspace @loftet/identity` verifies the package
+calendar. `pnpm --filter @loftet/identity pack --dry-run` verifies the package
 contents. No real organisation/PDS provider integration was exercised.

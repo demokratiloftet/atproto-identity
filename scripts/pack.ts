@@ -6,14 +6,13 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 mkdirSync(new URL("../dist/", import.meta.url), { recursive: true });
 for (const name of ["auth", "identity"]) {
   execFileSync(
-    "npm",
+    "pnpm",
     [
-      "pack",
-      "--workspace",
+      "--filter",
       `@loftet/${name}`,
+      "pack",
       "--pack-destination",
-      "dist",
-      "--ignore-scripts",
+      root + "dist",
     ],
     { cwd: root, stdio: "inherit" },
   );

@@ -23,7 +23,7 @@ claims, infer club membership, or treat provider identities as interchangeable.
 
 ## Reuse
 
-This directory is an npm workspace package, installed as `@loftet/auth`. Install its versioned archive together with `@loftet/identity` from this
+This directory is an pnpm workspace package, installed as `@loftet/auth`. Install its versioned archive together with `@loftet/identity` from this
 repository’s `dist/` output and import:
 
 ```js

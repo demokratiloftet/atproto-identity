@@ -21,10 +21,13 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24.17.0'
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.8.0
       - name: Scan Git history for secrets
         run: bash .github/scripts/scan-secrets.sh
-      - run: npm ci --ignore-scripts
-      - run: npm audit --audit-level=moderate
-      - run: npm run format:check
-      - run: npm test
-      - run: npm run test:package
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=moderate
+      - run: pnpm run format:check
+      - run: pnpm test
+      - run: pnpm run test:package

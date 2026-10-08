@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-execFileSync("npm", ["run", "build"], { cwd: root, stdio: "inherit" });
+execFileSync("pnpm", ["run", "build"], { cwd: root, stdio: "inherit" });
 execFileSync(process.execPath, ["scripts/pack.ts"], {
   cwd: root,
   stdio: "inherit",
@@ -24,12 +24,10 @@ try {
     return join(root, "dist", `loftet-${name}-${version}.tgz`);
   });
   execFileSync(
-    "npm",
+    "pnpm",
     [
-      "install",
+      "add",
       "--ignore-scripts",
-      "--no-audit",
-      "--no-fund",
       ...packages,
       "typescript@7.0.2",
       "@types/node@24.19.1",

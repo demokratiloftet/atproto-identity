@@ -4,20 +4,17 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=24.17 <25"
+    "node": ">=24.17 <25",
+    "pnpm": ">=11 <12"
   },
-  "workspaces": [
-    "packages/auth",
-    "packages/identity"
-  ],
   "scripts": {
     "test": "node --test test/*.test.ts",
     "test:integration": "node test/identity-integration.ts",
     "test:package": "node scripts/test-package.ts",
-    "pack": "npm run build && node scripts/pack.ts",
+    "pack": "pnpm run build && node scripts/pack.ts",
     "build": "tsc -p packages/auth && tsc -p packages/identity",
-    "typecheck": "npm run build && tsc --noEmit",
-    "pretest": "npm run typecheck",
+    "typecheck": "pnpm run build && tsc --noEmit",
+    "pretest": "pnpm run typecheck",
     "format": "prettier --write packages test scripts",
     "format:check": "prettier --check packages test scripts"
   },
@@ -25,6 +22,9 @@
     "@types/node": "24.19.1",
     "jose": "6.2.12",
     "prettier": "3.9.9",
-    "typescript": "7.0.2"
-  }
+    "typescript": "7.0.2",
+    "@loftet/auth": "workspace:*",
+    "@loftet/identity": "workspace:*"
+  },
+  "packageManager": "pnpm@11.8.0"
 }
