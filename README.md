@@ -105,3 +105,7 @@ declarations so consumers need no TypeScript runtime or loader. `pnpm run build`
 compiles auth first, then identity against its public package API. Generated
 `dist/` directories are ignored. Runtime validation of identities, protocol
 responses and request data remains necessary and is kept in place.
+
+## License
+
+Licensed under [MIT](LICENSE).
