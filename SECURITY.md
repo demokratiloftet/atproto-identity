@@ -1,7 +1,7 @@
 # Security and maintenance
 
-These are synthetic-data demos. A passing audit is not a guarantee of security.
-Do not put personal data or real identity evidence in the fixtures. Private
+Tests use synthetic data. A passing audit is not a guarantee of security.
+Do not put personal data or real identity evidence in fixtures. Private
 GitHub visibility does not make committed credentials safe.
 
 - Report suspected vulnerabilities privately to an organisation maintainer.
@@ -13,8 +13,8 @@ GitHub visibility does not make committed credentials safe.
   history for secrets. Dependencies and Actions are checked weekly by Dependabot.
 - Authentication, identity links and handle ownership do not grant membership.
   Check authorization at the point of access and fail closed on upstream failure.
-- Preserve isolation tests, synthetic identities and pinned image digests.
-  Never use `down -v` on a shared deployment. PDS upgrades need a backup and
-  migration review; do not automatically roll out an alpha database upgrade.
+- Instance deployment, live-PDS tests and provider activation belong on
+  `instance/test-pds`. Preserve that environment's isolation and backup rules.
+  Never deploy or reset a shared environment as part of library tests.
 
 See the README for this repository's specific deployment and trust boundaries.

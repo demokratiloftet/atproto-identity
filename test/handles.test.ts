@@ -11,10 +11,10 @@ const adapter = {
 const make = () =>
   new HandleProvisioner({
     namespaces: [
-      { domain: "idrett.devotta.no", providers: ["idrett"], adapter },
+      { domain: "org.example.com", providers: ["org"], adapter },
       {
-        domain: "demokratiloftet.no",
-        providers: ["idrett", "community"],
+        domain: "community.example.com",
+        providers: ["org", "community"],
         adapter,
       },
     ],
@@ -22,38 +22,38 @@ const make = () =>
 test("public package exposes gateway; domain choices follow verified provider", async () => {
   assert.equal(typeof IdentityGateway, "function");
   const p = make();
-  assert.equal(p.choices({ provider: "idrett" }).length, 2);
+  assert.equal(p.choices({ provider: "org" }).length, 2);
   assert.deepEqual(p.choices({ provider: "community" }), [
-    { domain: "demokratiloftet.no" },
+    { domain: "community.example.com" },
   ]);
   assert.deepEqual(p.choices({ provider: "unknown" }), []);
   await assert.rejects(() =>
     p.create(
-      { handle: "edvin.idrett.devotta.no", provider: "idrett" },
+      { handle: "alice.org.example.com", provider: "org" },
       { provider: "community" },
     ),
   );
   assert.equal(
     (
       await p.create(
-        { handle: "Edvin.Demokratiloftet.no" },
+        { handle: "Alice.Community.example.com" },
         { provider: "community" },
       )
     ).handle,
-    "edvin.demokratiloftet.no",
+    "alice.community.example.com",
   );
 });
 test("rejects reserved names, nested names, domain suffix spoofing and malformed handles", () => {
   const p = make();
   for (const handle of [
-    "admin.demokratiloftet.no",
-    "a.b.demokratiloftet.no",
-    "edvin.demokratiloftet.no.evil.no",
-    "edvin.evil-demokratiloftet.no",
-    "-edvin.demokratiloftet.no",
-    "edvin-.demokratiloftet.no",
-    "ed vin.demokratiloftet.no",
-    "edvin.demokratiloftet.no.",
+    "admin.community.example.com",
+    "a.b.community.example.com",
+    "alice.community.example.com.evil.no",
+    "alice.evil-community.example.com",
+    "-alice.community.example.com",
+    "alice-.community.example.com",
+    "ali ce.community.example.com",
+    "alice.community.example.com.",
     null,
   ]) {
     assert.throws(
@@ -61,15 +61,15 @@ test("rejects reserved names, nested names, domain suffix spoofing and malformed
       String(handle),
     );
   }
-  for (const s of p.suggest({ provider: "idrett" }))
-    p.validate(s, { provider: "idrett" });
+  for (const s of p.suggest({ provider: "org" }))
+    p.validate(s, { provider: "org" });
 });
 test("test namespaces are opt-in; namespace configuration fails closed", () => {
   for (const domain of [
     "test",
     "org.test",
     "org.local",
-    "devotta",
+    "single-label",
     "org.123",
     "org..no",
   ]) {
@@ -88,7 +88,7 @@ test("test namespaces are opt-in; namespace configuration fails closed", () => {
   assert.throws(
     () =>
       new HandleProvisioner({
-        namespaces: [{ domain: "devotta.no", providers: [], adapter }],
+        namespaces: [{ domain: "example.com", providers: [], adapter }],
       }),
   );
 });

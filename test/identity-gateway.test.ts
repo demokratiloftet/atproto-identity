@@ -12,10 +12,9 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { AuthStore, hash } from "../packages/auth/store.ts";
-import { sandboxPdsProvisioner } from "../packages/identity/sandbox-pds.ts";
 import { IdentityGateway } from "../packages/identity/gateway.ts";
-const origin = "https://calendar.example",
-  did = "did:plc:alice";
+const origin = "https://app.example",
+  did = "did:plc:abcdefghijklmnopqrstuvwx";
 function setup(t: TestContext) {
   const dir = mkdtempSync(join(tmpdir(), "identity-gateway-")),
     store = new AuthStore(dir);
@@ -109,7 +108,7 @@ function setup(t: TestContext) {
     at,
   };
 }
-test("OIDC-first login grants no calendar access before AT proof and explicit confirmation", async (t) => {
+test("OIDC-first login grants no app access before AT proof and explicit confirmation", async (t) => {
   const f = setup(t);
   await f.login();
   assert.equal(f.auth.current(f.req), undefined);
@@ -238,37 +237,6 @@ test("ambiguous creation failure persists a review marker across gateway restart
   await assert.rejects(() => f.auth.startAtproto(f.req, f.res, did));
 });
 
-test("sandbox provisioning rejects external handles and strips registration tokens", async () => {
-  const p = sandboxPdsProvisioner({
-    fetch: async (url, init) => {
-      assert.equal(
-        url,
-        "http://127.0.0.1:2583/xrpc/com.atproto.server.createAccount",
-      );
-      assert(init);
-      assert.equal(init.redirect, "error");
-      return Response.json({
-        did,
-        handle: "enroll-demo.test",
-        accessJwt: "discard",
-        refreshJwt: "discard",
-      });
-    },
-  });
-  assert.throws(() =>
-    p.validate({
-      handle: "person.bsky.social",
-      password: "synthetic-password",
-    }),
-  );
-  assert.deepEqual(
-    await p.create({
-      handle: "enroll-demo.test",
-      password: "synthetic-password",
-    }),
-    { did, handle: "enroll-demo.test" },
-  );
-});
 test("expired onboarding and unconfigured identity provider fail closed", async (t) => {
   const f = setup(t);
   await assert.rejects(() => f.auth.startIdentity(f.req, f.res, "unknown"));
@@ -351,4 +319,30 @@ test("malformed signup input is refused before reserving a handle or calling an 
     undefined,
   );
   assert.equal(f.store.get("identity-handle", "enroll-alice.test"), undefined);
+});
+
+test("generic provisioning accepts did:web accounts and rejects unsupported DID methods", async (t) => {
+  const f = setup(t);
+  await f.login();
+  f.provisioner.create = async () => ({
+    did: "did:web:account.example",
+    handle: "enroll-alice.test",
+  });
+  await f.auth.createIdentityAccount(f.req, { handle: "enroll-alice.test" });
+  assert.equal(
+    f.store.get("identity-signup", f.store.identityKey(f.identity))?.did,
+    "did:web:account.example",
+  );
+  const other = setup(t);
+  await other.login();
+  other.provisioner.create = async () => ({
+    did: "did:key:unsupported",
+    handle: "enroll-alice.test",
+  });
+  await assert.rejects(
+    other.auth.createIdentityAccount(other.req, {
+      handle: "enroll-alice.test",
+    }),
+  );
+  assert.equal(other.auth.state(other.req).onboarding?.needsReview, true);
 });

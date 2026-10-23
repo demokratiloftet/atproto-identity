@@ -1,107 +1,87 @@
-# Identity component
+# AT Protocol identity building blocks
 
-Reusable server-side identity and account onboarding for AT Protocol apps.
-This is a standalone Git repository, extracted from `calendar-app` commit
-`aff4ad0bb2736fea2240d5a7d66250d40ddd486a`. It owns the source and tests of two
-Node.js packages written in TypeScript; it is not an application, user directory or hosted SSO service.
+A small server-side TypeScript library for standard AT Protocol sign-in, browser
+sessions and optional OIDC account linking. It has no UI, deployment, fixed PDS,
+organisation provider preset, or dependency on a particular application.
 
-| Package | Responsibility |
-| --- | --- |
-| `@loftet/identity` | OIDC-first onboarding, handle/domain policy, provisioning adapter orchestration, explicit account linking and returning-user login |
-| `@loftet/auth` | OIDC validation, AT OAuth, browser sessions, encrypted SQLite storage, provider definitions and restricted transport |
+`main` owns the generic library. `instance/test-pds` owns our local PDS adapters,
+managed-account demo and named provider integrations. See [branch boundaries and
+migration](docs/BRANCHES.md).
 
-The flow is organisation login → proposed handle → confirmed account creation →
-AT authorization → confirmed identity link. Returning logins use the verified
-issuer/subject association to the same DID. A configured organisation domain
-and/or shared domain can be offered per provider. Handle ownership never grants
-organisation membership, roles or private-content access.
+## Start with standard sign-in
 
-## Develop and verify
+```ts
+import { AuthStore } from "@loftet/auth/store";
+import { createAtprotoProvider } from "@loftet/auth/atproto";
+import { AuthService } from "@loftet/auth/session";
 
-Requires Node.js 24.17.x and pnpm 11.8.0. No calendar checkout, Docker or network services
-are needed for the unit tests. Package installation needs the npm dependency
-cache or registry access.
+const origin = "https://your-app.example";
+const store = new AuthStore(
+  "./private-auth-data",
+  process.env.AUTH_ENCRYPTION_KEY,
+);
+const atproto = createAtprotoProvider({
+  origin,
+  store,
+  clientName: "Your app",
+});
+const auth = new AuthService({ origin, store, atproto });
+```
+
+Accept a handle, DID or HTTPS account-provider URL. The official AT Protocol SDK
+resolves the identity, discovers its PDS and OAuth server, and verifies the
+result. The default scope is always `atproto` (identity only). Apps explicitly
+request additional permissions. No Bluesky/Eurosky-specific adapter is required.
+
+Serve `atproto.metadata` and bind the start/callback methods to your HTTP routes;
+see [AT Protocol composition](docs/ATPROTO.md). Add only the blocks you need:
+
+| Package / import           | Responsibility                                                        |
+| -------------------------- | --------------------------------------------------------------------- |
+| `@loftet/auth/atproto`     | OAuth client, public metadata and optional resolver adapter           |
+| `@loftet/auth/session`     | Browser binding, session rotation and explicit account linking        |
+| `@loftet/auth/store`       | Encrypted SQLite persistence                                          |
+| `@loftet/auth/transport`   | Public HTTPS discovery or explicit origin allowlist                   |
+| `@loftet/auth/oidc`        | Generic OIDC validation for app-supplied providers                    |
+| `@loftet/identity/gateway` | Optional OIDC-first onboarding, followed by AT proof and consent      |
+| `@loftet/identity/handles` | Optional namespace policy around an app-supplied provisioning adapter |
+
+Root imports remain available. Package names identify the maintainer; they do
+not select a PDS, organisation, domain or app policy. Generic OIDC/onboarding is
+optional and does not replace AT OAuth. Login and identity linkage never imply
+membership, organisation verification or publishing rights.
+
+## Develop and package
+
+Requires Node.js 24.17.x and pnpm 11.8.0.
 
 ```sh
-# One-time setup if pnpm is not installed:
-npm install --global pnpm@11.8.0
-gh repo clone demokratiloftet/identity-component
-cd identity-component
 pnpm install --frozen-lockfile
-pnpm test # strict typecheck, compiled packages, then runtime tests
+pnpm test
+pnpm run format:check
 pnpm run test:package
 pnpm run pack
 ```
 
-`test:package` installs the two archives in a fresh directory outside this repo
-and checks their runtime imports and TypeScript declarations, including rejection
-of an invalid argument. `pack` produces versioned archives in ignored
-`dist/`. Packages are not published to npm. Source is maintained in the private
-`demokratiloftet/identity-component` repository.
+Tests use synthetic DNS/HTTP responses and temporary encrypted stores. No running
+PDS, public accounts or external provider activation is required. Package tests
+install archives in an independent directory and check runtime imports,
+TypeScript declarations and the absence of instance-only modules. Builds clean
+generated output before compilation so branch switches cannot leak stale files.
 
-Optional real-PDS test, **only with the existing isolated loopback PDS running**:
+`pack` produces `dist/loftet-auth-0.5.0.tgz` and
+`dist/loftet-identity-0.6.0.tgz`. Install these exact archives in a consumer,
+commit its vendor files and lockfile, and upgrade deliberately. Packages remain
+private and are not published to a registry. Existing consumers are unchanged.
 
-```sh
-pnpm run test:integration
-```
+## Boundaries
 
-It creates a disposable synthetic `.test` account without resetting the PDS.
-App integration/isolation tests continue to belong to the consuming app.
+This is a Node.js library, not a hosted login service or browser component.
+The encrypted store and refresh locks support one process. Each app needs its
+own origin, client metadata, store and keys; library reuse does not create
+cross-app SSO. Recovery, account migration, distributed locking and arbitrary
+provider signup are not implemented. Standard OAuth interoperability is tested
+with simulated servers; live provider compatibility must be verified separately.
 
-## Install in another app
-
-From this repository, produce the two archives with `pnpm run pack`. From the
-consumer app (example sibling layout):
-
-```sh
-mkdir -p vendor
-cp ../identity-component/dist/loftet-auth-0.3.0.tgz vendor/
-cp ../identity-component/dist/loftet-identity-0.3.0.tgz vendor/
-pnpm add --save-exact ./vendor/loftet-auth-0.3.0.tgz ./vendor/loftet-identity-0.3.0.tgz
-```
-
-Commit the two archives,
-package manifest and lockfile in the consumer. Docker must copy `vendor/` before
-installing dependencies. This keeps app builds self-contained while the source
-has one owner here. Do not edit extracted files in `node_modules` or copy source
-back into app repositories. Bump package versions for subsequent releases and
-update consumers deliberately. A registry or remote Git distribution can be
-introduced later; none is required for local reuse.
-
-```js
-import {IdentityGateway, HandleProvisioner} from '@loftet/identity';
-import {AuthStore, OidcProvider, createAtprotoProvider, restrictedFetch} from '@loftet/auth';
-```
-
-See [integration guide](docs/INTEGRATION.md),
-[gateway/domain API](packages/identity/README.md) and
-[auth/provider setup](packages/auth/README.md).
-
-## Consumers and limits
-
-- **calendar-app:** migrated to the 0.2.0 packages. Composition, UI and app
-  authorization stay in that repo; SQLite format and cookies are unchanged.
-- **loftet-social:** shared-component AT OAuth is active on the public demo as
-  of 2026-09-21. Private Spaces reads retain their separate native credential
-  checks. Organisation OIDC providers are not configured; local fixtures still
-  default to demo password login. See its `docs/IDENTITY.md` for verification.
-
-Real Idrettens ID, production domain/DNS provisioning, production PDS signup,
-Matrix, account recovery and automatic cross-app SSO are not implemented.
-AT OAuth authorization is still required. The encrypted store and locking are
-single-process. Multiple apps get separate registrations, stores, secrets and
-hostnames. Reusing a library does not create a common account registry: onboarding
-the same organisation identity independently in two stores can create two DIDs.
-For one account across apps, link an existing DID through each app's AT OAuth or
-design a shared onboarding broker as a separate feature. Never share SQLite
-files or keys between apps as a shortcut.
-
-## TypeScript and distribution
-
-All maintained package, test and tooling source is TypeScript with `strict: true`.
-`pnpm run typecheck` checks the complete source tree. Node 24 runs test/tooling
-`.ts` files; distributable packages contain compiled ESM JavaScript and `.d.ts`
-declarations so consumers need no TypeScript runtime or loader. `pnpm run build`
-compiles auth first, then identity against its public package API. Generated
-`dist/` directories are ignored. Runtime validation of identities, protocol
-responses and request data remains necessary and is kept in place.
+See [auth API](packages/auth/README.md), [optional onboarding](packages/identity/README.md),
+[HTTP integration](docs/INTEGRATION.md) and [security boundaries](SECURITY.md).

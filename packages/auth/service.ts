@@ -130,9 +130,13 @@ export class AuthService<A extends AtprotoProvider = AtprotoProvider> {
   loginContext(req: AuthRequest) {
     return { expectedDid: this.current(req)?.did };
   }
-  async startAtproto(req: AuthRequest, res: AuthResponse, handle: unknown) {
-    if (typeof handle !== "string" || handle.length > 253 || !handle.trim())
-      throw fail("Skriv inn kontonavnet ditt.");
+  async startAtproto(req: AuthRequest, res: AuthResponse, identifier: unknown) {
+    if (
+      typeof identifier !== "string" ||
+      identifier.length > 2048 ||
+      !identifier.trim()
+    )
+      throw fail("Skriv inn handle, DID eller adressen til kontoleverandøren.");
     const browser = this.browser(req, res),
       id = random();
     this.store.set(
@@ -144,7 +148,7 @@ export class AuthService<A extends AtprotoProvider = AtprotoProvider> {
     try {
       return {
         url: String(
-          await this.atproto.client.authorize(handle.trim(), {
+          await this.atproto.client.authorize(identifier.trim(), {
             state: id,
             prompt: "login",
           }),

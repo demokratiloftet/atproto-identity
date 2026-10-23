@@ -29,6 +29,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@atproto-labs/fetch-node':
+        specifier: 0.4.0
+        version: 0.4.0
       '@atproto/oauth-client-node':
         specifier: 0.5.7
         version: 0.5.7
@@ -38,6 +41,9 @@ importers:
 
   packages/identity:
     dependencies:
+      '@atproto/did':
+        specifier: 0.5.5
+        version: 0.5.5
       '@loftet/auth':
         specifier: workspace:^
         version: link:../auth

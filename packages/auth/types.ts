@@ -28,7 +28,6 @@ export interface ProviderDefinition {
   clientAuth?: string;
   scopes: string;
   idTokenAlgorithm?: string;
-  market?: string;
   acrValues?: string;
   requiredAcr?: string;
   demo?: boolean;
@@ -56,7 +55,7 @@ export interface AtprotoSession {
 export interface AtprotoProvider {
   client: {
     authorize(
-      handle: string,
+      identifier: string,
       options: { state: string; prompt: "login" },
     ): Promise<URL>;
     callback(params: URLSearchParams): Promise<{

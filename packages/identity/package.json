@@ -1,6 +1,6 @@
 {
   "name": "@loftet/identity",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -8,15 +8,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./sandbox": {
-      "types": "./dist/sandbox-pds.d.ts",
-      "import": "./dist/sandbox-pds.js"
+    "./gateway": {
+      "types": "./dist/gateway.d.ts",
+      "import": "./dist/gateway.js"
+    },
+    "./handles": {
+      "types": "./dist/handles.d.ts",
+      "import": "./dist/handles.js"
     }
   },
   "files": [
     "dist",
-    "README.md",
-    "providers/*.json"
+    "README.md"
   ],
   "engines": {
     "node": ">=24.17 <25"
@@ -24,5 +27,8 @@
   "peerDependencies": {
     "@loftet/auth": "workspace:^"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@atproto/did": "0.5.5"
+  }
 }

@@ -73,3 +73,5 @@ export function restrictedFetch(
     });
   };
 }
+
+export { publicFetch } from "./public-transport.ts";

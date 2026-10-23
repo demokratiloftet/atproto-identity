@@ -218,3 +218,31 @@ test("OIDC response cannot attach after browser logout during token exchange", a
   assert.equal(store.get("pending", key), undefined);
   assert.equal(store.listLinks(did).length, 0);
 });
+
+test("login accepts handle, DID and provider URL and removes failed flows", async (t) => {
+  const { auth, store, req, res } = setup(t);
+  for (const identifier of [
+    "alice.example",
+    "did:web:alice.example",
+    "https://pds.example",
+    `did:web:${"a".repeat(300)}.example`,
+  ]) {
+    auth.atproto.client.authorize = async (input) => {
+      assert.equal(input, identifier);
+      throw new Error("Synthetic discovery failure");
+    };
+    await assert.rejects(
+      auth.startAtproto(req, res, ` ${identifier} `),
+      /Synthetic discovery failure/,
+    );
+    assert.equal(
+      store.db
+        .prepare("SELECT COUNT(*) AS n FROM kv WHERE namespace='flow'")
+        .get()?.n,
+      0,
+    );
+  }
+  for (const input of [null, {}, "", "   ", "x".repeat(2049)]) {
+    await assert.rejects(auth.startAtproto(req, res, input), /handle, DID/);
+  }
+});

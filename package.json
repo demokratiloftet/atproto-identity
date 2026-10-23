@@ -9,10 +9,9 @@
   },
   "scripts": {
     "test": "node --test test/*.test.ts",
-    "test:integration": "node test/identity-integration.ts",
     "test:package": "node scripts/test-package.ts",
     "pack": "pnpm run build && node scripts/pack.ts",
-    "build": "tsc -p packages/auth && tsc -p packages/identity",
+    "build": "node scripts/build.ts",
     "typecheck": "pnpm run build && tsc --noEmit",
     "pretest": "pnpm run typecheck",
     "format": "prettier --write packages test scripts",

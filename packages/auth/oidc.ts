@@ -19,11 +19,6 @@ export class OidcProvider {
       allowHttp = false,
     }: { origin: string; fetch: Fetch; allowHttp?: boolean },
   ) {
-    if (
-      definition.market &&
-      !["NO", "SE", "DK", "FI"].includes(definition.market)
-    )
-      throw new Error("Invalid OIDC market");
     this.definition = definition;
     this.origin = origin;
     this.fetch = fetch;
@@ -91,7 +86,6 @@ export class OidcProvider {
       nonce,
       code_challenge: await oidc.calculatePKCECodeChallenge(verifier),
       code_challenge_method: "S256",
-      ...(this.definition.market ? { market: this.definition.market } : {}),
       prompt: "login",
       max_age: "300",
       ...(this.definition.acrValues

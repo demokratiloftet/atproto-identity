@@ -1,3 +1,4 @@
+import { isAtprotoDid } from "@atproto/did";
 import { accountInput } from "./types.ts";
 import type {
   AuthRequest,
@@ -280,7 +281,7 @@ export class IdentityGateway<
       const account = await this.provisioner.create(normalizedInput, context);
       if (
         typeof account?.did !== "string" ||
-        !account.did.startsWith("did:plc:") ||
+        !isAtprotoDid(account.did) ||
         account.handle !== handle
       )
         throw fail("Unexpected provisioned account");
@@ -290,7 +291,17 @@ export class IdentityGateway<
         handle: account.handle,
       });
       return { handle: account.handle };
-    } catch {
+    } catch (error) {
+      if (
+        error &&
+        typeof error === "object" &&
+        "safeToRetry" in error &&
+        error.safeToRetry === true
+      ) {
+        this.store.del("identity-signup", key);
+        this.store.del("identity-handle", handle);
+        throw error;
+      }
       this.store.set("identity-signup", key, {
         status: "needs-review",
         handle: input.handle,
