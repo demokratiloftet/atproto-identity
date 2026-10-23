@@ -85,3 +85,7 @@ with simulated servers; live provider compatibility must be verified separately.
 
 See [auth API](packages/auth/README.md), [optional onboarding](packages/identity/README.md),
 [HTTP integration](docs/INTEGRATION.md) and [security boundaries](SECURITY.md).
+
+## License
+
+Licensed under [MIT](LICENSE).
