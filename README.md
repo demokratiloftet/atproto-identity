@@ -11,9 +11,9 @@ migration](docs/BRANCHES.md).
 ## Start with standard sign-in
 
 ```ts
-import { AuthStore } from "@loftet/auth/store";
-import { createAtprotoProvider } from "@loftet/auth/atproto";
-import { AuthService } from "@loftet/auth/session";
+import { AuthStore } from "@atproto-identity/auth/store";
+import { createAtprotoProvider } from "@atproto-identity/auth/atproto";
+import { AuthService } from "@atproto-identity/auth/session";
 
 const origin = "https://your-app.example";
 const store = new AuthStore(
@@ -36,15 +36,15 @@ request additional permissions. No Bluesky/Eurosky-specific adapter is required.
 Serve `atproto.metadata` and bind the start/callback methods to your HTTP routes;
 see [AT Protocol composition](docs/ATPROTO.md). Add only the blocks you need:
 
-| Package / import           | Responsibility                                                        |
-| -------------------------- | --------------------------------------------------------------------- |
-| `@loftet/auth/atproto`     | OAuth client, public metadata and optional resolver adapter           |
-| `@loftet/auth/session`     | Browser binding, session rotation and explicit account linking        |
-| `@loftet/auth/store`       | Encrypted SQLite persistence                                          |
-| `@loftet/auth/transport`   | Public HTTPS discovery or explicit origin allowlist                   |
-| `@loftet/auth/oidc`        | Generic OIDC validation for app-supplied providers                    |
-| `@loftet/identity/gateway` | Optional OIDC-first onboarding, followed by AT proof and consent      |
-| `@loftet/identity/handles` | Optional namespace policy around an app-supplied provisioning adapter |
+| Package / import                     | Responsibility                                                        |
+| ------------------------------------ | --------------------------------------------------------------------- |
+| `@atproto-identity/auth/atproto`     | OAuth client, public metadata and optional resolver adapter           |
+| `@atproto-identity/auth/session`     | Browser binding, session rotation and explicit account linking        |
+| `@atproto-identity/auth/store`       | Encrypted SQLite persistence                                          |
+| `@atproto-identity/auth/transport`   | Public HTTPS discovery or explicit origin allowlist                   |
+| `@atproto-identity/auth/oidc`        | Generic OIDC validation for app-supplied providers                    |
+| `@atproto-identity/identity/gateway` | Optional OIDC-first onboarding, followed by AT proof and consent      |
+| `@atproto-identity/identity/handles` | Optional namespace policy around an app-supplied provisioning adapter |
 
 Root imports remain available. Package names identify the maintainer; they do
 not select a PDS, organisation, domain or app policy. Generic OIDC/onboarding is

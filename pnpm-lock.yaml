@@ -8,10 +8,10 @@ importers:
 
   .:
     devDependencies:
-      '@loftet/auth':
+      '@atproto-identity/auth':
         specifier: workspace:*
         version: link:packages/auth
-      '@loftet/identity':
+      '@atproto-identity/identity':
         specifier: workspace:*
         version: link:packages/identity
       '@types/node':
@@ -41,12 +41,12 @@ importers:
 
   packages/identity:
     dependencies:
+      '@atproto-identity/auth':
+        specifier: workspace:^
+        version: link:../auth
       '@atproto/did':
         specifier: 0.5.5
         version: 0.5.5
-      '@loftet/auth':
-        specifier: workspace:^
-        version: link:../auth
 
 packages:
 

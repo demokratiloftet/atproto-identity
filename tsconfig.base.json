@@ -7,9 +7,7 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "rewriteRelativeImportExtensions": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "noEmitOnError": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true

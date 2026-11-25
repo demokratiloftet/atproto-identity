@@ -1,24 +1,24 @@
-# @loftet/auth
+# @atproto-identity/auth
 
 Provider-neutral server-side identity blocks. Standard AT Protocol OAuth is the
 default flow; generic OIDC is an optional way to link or verify an external
 identity. The library includes no fixed PDS or named identity-provider preset.
 
-| Import                   | Exports                                                                                   |
-| ------------------------ | ----------------------------------------------------------------------------------------- |
-| `@loftet/auth/atproto`   | `createAtprotoProvider`, `atprotoClientMetadata`, `createPdsHandleResolver`, option types |
-| `@loftet/auth/session`   | `AuthService`, `AuthServiceOptions`                                                       |
-| `@loftet/auth/store`     | `AuthStore`, `hash`, `random`                                                             |
-| `@loftet/auth/transport` | `publicFetch`, `restrictedFetch`                                                          |
-| `@loftet/auth/oidc`      | `OidcProvider`                                                                            |
+| Import                             | Exports                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------- |
+| `@atproto-identity/auth/atproto`   | `createAtprotoProvider`, `atprotoClientMetadata`, `createPdsHandleResolver`, option types |
+| `@atproto-identity/auth/session`   | `AuthService`, `AuthServiceOptions`                                                       |
+| `@atproto-identity/auth/store`     | `AuthStore`, `hash`, `random`                                                             |
+| `@atproto-identity/auth/transport` | `publicFetch`, `restrictedFetch`                                                          |
+| `@atproto-identity/auth/oidc`      | `OidcProvider`                                                                            |
 
-Root exports and shared types are available from `@loftet/auth`. AT-only imports
+Root exports and shared types are available from `@atproto-identity/auth`. AT-only imports
 do not load SQLite or OIDC implementations at runtime.
 
 ```ts
-import { AuthStore } from "@loftet/auth/store";
-import { createAtprotoProvider } from "@loftet/auth/atproto";
-import { AuthService } from "@loftet/auth/session";
+import { AuthStore } from "@atproto-identity/auth/store";
+import { createAtprotoProvider } from "@atproto-identity/auth/atproto";
+import { AuthService } from "@atproto-identity/auth/session";
 
 const origin = "https://app.example";
 const store = new AuthStore(
