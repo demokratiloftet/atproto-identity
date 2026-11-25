@@ -29,6 +29,6 @@
   },
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "@atproto/did": "0.5.5"
+    "@atproto/did": "0.5.6"
   }
 }
