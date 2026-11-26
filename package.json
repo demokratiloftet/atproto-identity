@@ -9,12 +9,14 @@
     "pnpm": ">=11 <12"
   },
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "test": "node --test test/*.test.ts",
     "test:package": "node scripts/test-package.ts",
     "pack": "pnpm run build && node scripts/pack.ts",
     "build": "node scripts/build.ts",
     "typecheck": "pnpm run build && tsc --noEmit",
     "pretest": "pnpm run typecheck",
+    "check": "pnpm run format:check && pnpm test",
     "format": "prettier --write packages test scripts",
     "format:check": "prettier --check packages test scripts"
   },
