@@ -2,3 +2,8 @@ packages:
   - packages/*
 allowBuilds:
   core-js: false
+
+# Force zod 4.6.6 to patch GHSA-mrhx-c7xc-m3w5.
+# Reached us via @atproto/did > zod.
+overrides:
+  zod: "4.6.6"
