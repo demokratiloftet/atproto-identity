@@ -8,9 +8,9 @@ SDK for identity verification, PKCE, PAR, DPoP, OAuth discovery and token refres
 ## Smallest composition
 
 ```ts
-import { AuthStore } from "@loftet/auth/store";
-import { createAtprotoProvider } from "@loftet/auth/atproto";
-import { AuthService } from "@loftet/auth/session";
+import { AuthStore } from "@atproto-identity/auth/store";
+import { createAtprotoProvider } from "@atproto-identity/auth/atproto";
+import { AuthService } from "@atproto-identity/auth/session";
 
 const origin = "https://your-app.example";
 const store = new AuthStore(
@@ -60,15 +60,15 @@ requests. Actual API access depends on the granted scope and the host's features
 
 ## Add blocks as needed
 
-| Need                                       | Import                                                                       |
-| ------------------------------------------ | ---------------------------------------------------------------------------- |
-| OAuth and its public metadata              | `createAtprotoProvider`, `atprotoClientMetadata` from `@loftet/auth/atproto` |
-| Browser sessions                           | `AuthService` from `@loftet/auth/session`                                    |
-| Encrypted persistence                      | `AuthStore` from `@loftet/auth/store`                                        |
-| Public HTTPS / controlled network          | `publicFetch`, `restrictedFetch` from `@loftet/auth/transport`               |
-| Organisation OIDC                          | `OidcProvider` from `@loftet/auth/oidc`                                      |
-| Explicit linking and OIDC-first onboarding | `IdentityGateway` from `@loftet/identity/gateway`                            |
-| Approved handle namespaces                 | `HandleProvisioner` from `@loftet/identity/handles`                          |
+| Need                                       | Import                                                                                 |
+| ------------------------------------------ | -------------------------------------------------------------------------------------- |
+| OAuth and its public metadata              | `createAtprotoProvider`, `atprotoClientMetadata` from `@atproto-identity/auth/atproto` |
+| Browser sessions                           | `AuthService` from `@atproto-identity/auth/session`                                    |
+| Encrypted persistence                      | `AuthStore` from `@atproto-identity/auth/store`                                        |
+| Public HTTPS / controlled network          | `publicFetch`, `restrictedFetch` from `@atproto-identity/auth/transport`               |
+| Organisation OIDC                          | `OidcProvider` from `@atproto-identity/auth/oidc`                                      |
+| Explicit linking and OIDC-first onboarding | `IdentityGateway` from `@atproto-identity/identity/gateway`                            |
+| Approved handle namespaces                 | `HandleProvisioner` from `@atproto-identity/identity/handles`                          |
 
 All previous root imports still work. The low-level metadata builder can also be
 used directly with `NodeOAuthClient` when an application owns its storage and
@@ -107,8 +107,8 @@ When an application needs a controlled resolver, compose it explicitly:
 import {
   createAtprotoProvider,
   createPdsHandleResolver,
-} from "@loftet/auth/atproto";
-import { restrictedFetch } from "@loftet/auth/transport";
+} from "@atproto-identity/auth/atproto";
+import { restrictedFetch } from "@atproto-identity/auth/transport";
 
 const request = restrictedFetch(config.allowedOrigins);
 const atproto = createAtprotoProvider({

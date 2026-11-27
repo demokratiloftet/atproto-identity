@@ -8,9 +8,9 @@ For organisation login or identity linking, add a generic OIDC provider with
 trusted server configuration and an explicit network allowlist:
 
 ```ts
-import { OidcProvider } from "@loftet/auth/oidc";
-import { restrictedFetch } from "@loftet/auth/transport";
-import { IdentityGateway } from "@loftet/identity/gateway";
+import { OidcProvider } from "@atproto-identity/auth/oidc";
+import { restrictedFetch } from "@atproto-identity/auth/transport";
+import { IdentityGateway } from "@atproto-identity/identity/gateway";
 
 const request = restrictedFetch(config.oidcOrigins);
 const providers = config.oidcProviders.map(

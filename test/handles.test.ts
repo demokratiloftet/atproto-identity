@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { HandleProvisioner, IdentityGateway } from "@loftet/identity";
+import { HandleProvisioner, IdentityGateway } from "@atproto-identity/identity";
 
 const adapter = {
   validate() {},

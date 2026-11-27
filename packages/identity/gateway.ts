@@ -6,7 +6,7 @@ import type {
   AuthServiceOptions,
   AtprotoProvider,
   StoredFlow,
-} from "@loftet/auth";
+} from "@atproto-identity/auth";
 import type { Provisioner } from "./types.ts";
 export interface IdentityGatewayOptions<
   A extends AtprotoProvider = AtprotoProvider,
@@ -14,7 +14,7 @@ export interface IdentityGatewayOptions<
   provisioner?: Provisioner;
   entryProviders?: string[];
 }
-import { AuthService, hash, random } from "@loftet/auth";
+import { AuthService, hash, random } from "@atproto-identity/auth";
 const TTL = 10 * 60000;
 const fail = (message: string, status = 400) =>
   Object.assign(new Error(message), { status });

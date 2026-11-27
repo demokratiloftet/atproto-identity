@@ -1,32 +1,30 @@
 {
-  "name": "loftet-identity-component",
+  "name": "atproto-identity",
   "version": "0.3.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=24.17 <25",
+    "node": ">=24.16 <25",
     "pnpm": ">=11 <12"
   },
   "scripts": {
     "prepare": "git config core.hooksPath .githooks || true",
+    "build": "tsc --build",
+    "typecheck": "tsc --build",
+    "pretest": "pnpm run build",
     "test": "node --test test/*.test.ts",
-    "test:package": "node scripts/test-package.ts",
-    "pack": "pnpm run build && node scripts/pack.ts",
-    "build": "node scripts/build.ts",
-    "typecheck": "pnpm run build && tsc --noEmit",
-    "pretest": "pnpm run typecheck",
-    "check": "pnpm run format:check && pnpm test",
-    "format": "prettier --write packages test scripts",
-    "format:check": "prettier --check packages test scripts"
+    "check": "pnpm run format:check && pnpm run typecheck && pnpm test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@types/node": "24.19.1",
-    "jose": "6.2.12",
-    "prettier": "3.9.9",
+    "jose": "6.2.18",
+    "prettier": "3.10.1",
     "typescript": "7.0.2",
-    "@loftet/auth": "workspace:*",
-    "@loftet/identity": "workspace:*"
+    "@atproto-identity/auth": "workspace:*",
+    "@atproto-identity/identity": "workspace:*"
   },
   "packageManager": "pnpm@11.8.0"
 }

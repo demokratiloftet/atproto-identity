@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "outDir": "dist/.check",
+    "rewriteRelativeImportExtensions": false,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["test/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["**/dist", "node_modules"],
+  "references": [
+    { "path": "./packages/auth" },
+    { "path": "./packages/identity" }
+  ]
+}

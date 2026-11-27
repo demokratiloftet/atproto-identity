@@ -1,13 +1,13 @@
-# @loftet/identity
+# @atproto-identity/identity
 
-Optional, provider-neutral onboarding on top of `@loftet/auth`. Basic AT sign-in
+Optional, provider-neutral onboarding on top of `@atproto-identity/auth`. Basic AT sign-in
 only needs `AuthService`; use this package when the app also needs OIDC-first
 onboarding, explicit account association or a provisioning extension point.
 
 ```ts
-import { IdentityGateway } from "@loftet/identity/gateway";
-import { HandleProvisioner } from "@loftet/identity/handles";
-import type { Provisioner } from "@loftet/identity";
+import { IdentityGateway } from "@atproto-identity/identity/gateway";
+import { HandleProvisioner } from "@atproto-identity/identity/handles";
+import type { Provisioner } from "@atproto-identity/identity";
 ```
 
 `IdentityGateway` extends `AuthService`. Configured `entryProviders` can initiate
