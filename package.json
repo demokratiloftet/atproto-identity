@@ -10,8 +10,9 @@
   },
   "scripts": {
     "build": "tsc --build",
+    "typecheck": "tsc --build",
+    "pretest": "pnpm run build",
     "test": "node --test test/*.test.ts",
-    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
