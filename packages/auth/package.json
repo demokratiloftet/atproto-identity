@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@atproto-labs/fetch-node": "0.4.6",
-    "@atproto/oauth-client-node": "0.5.13",
+    "@atproto/oauth-client-node": "0.5.18",
     "openid-client": "6.9.1"
   },
   "files": [
